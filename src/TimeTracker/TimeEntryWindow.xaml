@@ -1,0 +1,55 @@
+﻿<Window x:Class="TimeTracker.TimeEntryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TimeTracker"
+        mc:Ignorable="d"
+        Title="TimeEntryWindow" Height="250" Width="300">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="10,0,10,10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                <Label FontWeight="Bold">Date:</Label>
+                <DatePickerTextBox Width="70" HorizontalAlignment="Left">2021-07-22</DatePickerTextBox>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" Margin="0,0,10,0">
+                <Label>Client:</Label>
+                <ComboBox></ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="0,0,10,0">
+                <Label>Project:</Label>
+                <ComboBox></ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                <Label>Start Time:</Label>
+                <TextBox HorizontalAlignment="Left"  VerticalAlignment="Center" Width="40">08:00</TextBox>
+                <Label>End Time:</Label>
+                <TextBox HorizontalAlignment="Left" VerticalAlignment="Center" Width="40">08:00</TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Grid.Row="3">
+                <Label>Task</Label>
+                <ComboBox HorizontalAlignment="Left"
+                          IsEditable="True"></ComboBox>
+            <Label>Comment</Label>
+            <ComboBox HorizontalAlignment="Left"
+                          IsEditable="True">
+            </ComboBox>
+        </StackPanel>
+    </Grid>
+</Window>

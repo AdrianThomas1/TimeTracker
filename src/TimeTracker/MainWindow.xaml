@@ -1,0 +1,53 @@
+﻿<Window x:Class="TimeTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TimeTracker"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+    <Window.Resources>
+        <CollectionViewSource x:Key="timeEntriesViewSource" />
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="103*"/>
+            <ColumnDefinition Width="677*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,387" Grid.RowSpan="2">
+            <ToolBarTray DockPanel.Dock="Top">
+                <ToolBar>
+                    <Button Content="Projects" Click="Button_Click"/>
+                </ToolBar>
+            </ToolBarTray>
+        </DockPanel>
+        <DataGrid Grid.Row="1" x:Name="timeEntriesDataGrid" AutoGenerateColumns="False" 
+          EnableRowVirtualization="True" 
+          ItemsSource="{Binding Source={StaticResource timeEntriesViewSource}}" 
+          RowDetailsVisibilityMode="VisibleWhenSelected" 
+          RenderTransformOrigin="0.488,0.251" Grid.ColumnSpan="2"
+                  IsReadOnly="True" SelectionChanged="timeEntriesDataGrid_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding StartTime, StringFormat=\{0:yyyy-MM-dd\}}" Header="Date" Width="auto"/>
+                <DataGridTextColumn Binding="{Binding Project.Client.Name}" Header="Client" Width="auto" />
+                <DataGridTextColumn Binding="{Binding Project.Name}" Header="Project" Width="auto"/>
+                <DataGridTextColumn Binding="{Binding EntryType}" Header="Type" Width="auto"/>
+                <DataGridTextColumn Binding="{Binding StartTime, StringFormat=\{0:HH:mm\}}" Header="StartTime" Width="auto"/>
+                <DataGridTextColumn Binding="{Binding EndTime, StringFormat=\{0:HH:mm\}}" Header="EndTime" Width="auto"/>
+                <DataGridTextColumn Binding="{Binding Duration}" Header="Duration" Width="auto"/>
+                <DataGridTextColumn Binding="{Binding Task}" Header="Task" Width="auto"/>
+                <DataGridTextColumn Binding="{Binding Description}" Header="Description" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <StatusBar Grid.Row="3" Margin="5">
+            <StatusBarItem Content="test"></StatusBarItem>
+        </StatusBar>
+
+    </Grid>
+
+</Window>
