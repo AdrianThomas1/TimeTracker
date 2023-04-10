@@ -27,26 +27,45 @@ namespace TimeTracker
     {
         private readonly IServiceProvider serviceProvider;
         private readonly Views.TimeEntiesView vm;
+        
         private CollectionViewSource timeEntriesViewSource;
+        private CollectionViewSource projectsViewSource;
+        private CollectionViewSource clientViewSource;
 
         public MainWindow(IServiceProvider serviceProvider, Views.TimeEntiesView view)
         {
             this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             this.vm = view;
             InitializeComponent();
-            timeEntriesViewSource = (CollectionViewSource)FindResource(nameof(timeEntriesViewSource));
+            this.timeEntriesViewSource = (CollectionViewSource)FindResource(nameof(timeEntriesViewSource));
+            this.projectsViewSource = (CollectionViewSource)FindResource(nameof(projectsViewSource));
+            this.clientViewSource = (CollectionViewSource)FindResource(nameof(clientViewSource));
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            timeEntriesViewSource.Source = vm.TimeEntries;
+            timeEntriesViewSource.Source = vm.TimeEntries();
+            clientViewSource.Source = vm.Clients();
         }
 
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var projectsWindows = serviceProvider.GetService<ProjectsWindow>();
-            projectsWindows.Show();
+            switch (((System.Windows.Controls.Button)e.Source).Content)
+            {
+                case "TimeEntry":
+                    var timeEntryWindow = serviceProvider.GetService<TimeEntryWindow>();
+                    timeEntryWindow.ShowDialog();
+                    break;
+
+                case "Projects":
+                    var projectsWindows = serviceProvider.GetService<ProjectsWindow>();
+                    projectsWindows.ShowDialog();
+                    break;
+
+
+            }
+            
         }
 
         private void timeEntriesDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

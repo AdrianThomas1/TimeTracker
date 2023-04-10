@@ -26,6 +26,7 @@ namespace TimeTracker.Views
         {
             await _context.Clients.LoadAsync();
             await _context.Projects.LoadAsync();
+            var test = await _context.Clients.ToListAsync();
             //_context.Clients.Local.ToObservableCollection();
             _projects = _context.Projects.Local.ToObservableCollection();
 
@@ -48,7 +49,7 @@ namespace TimeTracker.Views
         public void RefreshProjects()
         {
             _projects = new ObservableCollection<Models.Project>(
-                _context.Projects.Where(e => e.isDeleted == false)
+                _context.Projects.Where(e => e.IsDeleted == false)
                 .ToList()
              );
             
@@ -57,7 +58,7 @@ namespace TimeTracker.Views
         public void ShowDeleted()
         {
             _projects = new ObservableCollection<Models.Project>(
-                _context.Projects.IgnoreQueryFilters().Where(e => e.isDeleted == true)
+                _context.Projects.IgnoreQueryFilters().Where(e => e.IsDeleted == true)
                 .ToList()
              );
         }

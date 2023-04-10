@@ -5,13 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using TimeTracker.DbContext;
 using System.Linq;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace TimeTracker.Views
 {
     public class TimeEntiesView
     {
         private readonly TimeTrackerDbContext _context;
-        private IEnumerable<Models.TimeEntry> _entries;
+       // private IEnumerable<Models.TimeEntry> _entries;
         
         public TimeEntiesView(TimeTrackerDbContext DbContext)
         {
@@ -19,15 +20,28 @@ namespace TimeTracker.Views
             Initialize();
         }
 
-        public IEnumerable<Models.TimeEntry> TimeEntries
+        public IEnumerable<Models.TimeEntry> TimeEntries()
         {
-            get { return _entries; }
+            _context.TimeEntries.LoadAsync();
+            return _context.TimeEntries
+                .Local.ToObservableCollection();
         }
 
-        private async void Initialize()
+        
+        private void Initialize()
         {
-            await _context.TimeEntries.LoadAsync();
+            _context.TimeEntries.Load();
+            _context.Clients.Load();
             //_entries = _context.TimeEntries.Local.ToObservableCollection();
+        }
+        
+
+        public IEnumerable<Models.Client> Clients()
+        {
+            return _context.Projects
+                .Select(p => p.Client)
+                .OrderBy(p => p.Name)
+                .ToList();
         }
     }
 }

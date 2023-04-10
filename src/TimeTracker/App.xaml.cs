@@ -45,11 +45,12 @@ namespace TimeTracker
                 options.UseLazyLoadingProxies();
                 options.UseSqlite($"Data Source = {Configuration.GetSection("database").Value}");
             });
-            services.AddSingleton<TimeEntryWindow>();
+            //services.AddSingleton<TimeEntryWindow>();
             services.AddSingleton<MainWindow>();
             services.AddTransient<ProjectsWindow>();
             services.AddScoped<Views.ProjectsView>();
             services.AddScoped<Views.TimeEntiesView>();
+            //services.AddScoped<Views.TimeEntiesView>();
             //services.AddScoped<DbContext.TimeTrackerDbContext>();
         }
 
@@ -61,8 +62,8 @@ namespace TimeTracker
 
         private void OnStartup(object sender, StartupEventArgs e)
         {
-            var timeEntry = serviceProvider.GetRequiredService<TimeEntryWindow>();
-            timeEntry.Show();
+            //var timeEntry = serviceProvider.GetRequiredService<TimeEntryWindow>();
+            //timeEntry.Show();
             var mainWindow = serviceProvider.GetService<MainWindow>();
             mainWindow.Show();
         }

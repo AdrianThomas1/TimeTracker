@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TimeTracker.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,7 @@ namespace TimeTracker.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    isDeleted = table.Column<bool>(type: "INTEGER", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,12 +28,13 @@ namespace TimeTracker.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ClientId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Source = table.Column<string>(type: "TEXT", nullable: true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Reference = table.Column<string>(type: "TEXT", nullable: true),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
+                    IsProductive = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsBillable = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    isDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     Hours = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -59,7 +60,8 @@ namespace TimeTracker.Migrations
                     EntryType = table.Column<string>(type: "TEXT", nullable: true),
                     Task = table.Column<string>(type: "TEXT", nullable: true),
                     Comment = table.Column<string>(type: "TEXT", nullable: true),
-                    isDeleted = table.Column<bool>(type: "INTEGER", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsCaptured = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

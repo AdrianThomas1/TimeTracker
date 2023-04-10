@@ -73,7 +73,7 @@ namespace TimeTracker
             var grid = (DataGrid)contextMenu.PlacementTarget;
             foreach (Models.Project item in grid.SelectedItems)
             {
-                item.isDeleted = false;
+                item.IsDeleted = false;
             }
             vm.Save();
             vm.ShowDeleted();

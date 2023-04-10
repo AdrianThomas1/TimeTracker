@@ -47,14 +47,16 @@ namespace TimeTracker.DbContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.Entity<Client>();
-            modelBuilder.Entity<Client>().Property<bool>("isDeleted");
-            modelBuilder.Entity<Client>().HasQueryFilter(m => EF.Property<bool>(m, "isDeleted") == false);
-            modelBuilder.Entity<Project>().Property<bool>("isDeleted");
-            modelBuilder.Entity<Project>().HasQueryFilter(m => EF.Property<bool>(m, "isDeleted") == false);
-            modelBuilder.Entity<TimeEntry>().Property<bool>("isDeleted");
-            modelBuilder.Entity<TimeEntry>().HasQueryFilter(m => EF.Property<bool>(m, "isDeleted") == false);
+            modelBuilder.Entity<Client>().Property<bool>("IsDeleted").HasDefaultValue(false);
+            modelBuilder.Entity<Client>().HasQueryFilter(m => EF.Property<bool>(m, "IsDeleted") == false);
+            modelBuilder.Entity<Project>().Property<bool>("IsDeleted").HasDefaultValue(false);
+            modelBuilder.Entity<Project>().HasQueryFilter(m => EF.Property<bool>(m, "IsDeleted") == false);
+            modelBuilder.Entity<TimeEntry>().Property<bool>("IsDeleted").HasDefaultValue(false);
+            modelBuilder.Entity<TimeEntry>().HasQueryFilter(m => EF.Property<bool>(m, "IsDeleted") == false);
             base.OnModelCreating(modelBuilder);
         }
+
+        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -82,11 +84,11 @@ namespace TimeTracker.DbContext
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.CurrentValues["isDeleted"] = false;
+                        entry.CurrentValues["IsDeleted"] = false;
                         break;
                     case EntityState.Deleted:
                         entry.State = EntityState.Modified;
-                        entry.CurrentValues["isDeleted"] = true;
+                        entry.CurrentValues["IsDeleted"] = true;
                         break;
                 }
             }

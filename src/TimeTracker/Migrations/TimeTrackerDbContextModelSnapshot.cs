@@ -22,11 +22,13 @@ namespace TimeTracker.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -51,6 +53,11 @@ namespace TimeTracker.Migrations
                     b.Property<bool>("IsBillable")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false);
+
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("INTEGER");
 
@@ -60,11 +67,8 @@ namespace TimeTracker.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Reference")
+                    b.Property<string>("Source")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -88,6 +92,14 @@ namespace TimeTracker.Migrations
                     b.Property<string>("EntryType")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsCaptured")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false);
+
                     b.Property<int?>("ProjectId")
                         .HasColumnType("INTEGER");
 
@@ -96,12 +108,6 @@ namespace TimeTracker.Migrations
 
                     b.Property<string>("Task")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isCaptured")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

@@ -8,8 +8,8 @@ namespace TimeTracker.Models
     public class TimeEntry
     {
         public int Id { get; set; }
-        
-        public DateTime StartTime { get; set; }
+
+        public DateTime StartTime { get; set; } = DateTime.Now.Date;
         
         public DateTime EndTime { get; set; }
         
@@ -21,9 +21,9 @@ namespace TimeTracker.Models
         
         public string Comment { get; set; }
         
-        public bool isDeleted { get; set; }
+        public bool IsDeleted { get; set; }
 
-        public bool isCaptured { get; set; }
+        public bool IsCaptured { get; set; }
         
         [NotMapped]
         public double Duration
