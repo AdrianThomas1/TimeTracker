@@ -61,12 +61,43 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
-                <!--<DataGridTextColumn Binding="{Binding StartTime, StringFormat=\{0:yyyy-MM-dd\}}" Header="Date" Width="auto"/>-->
+
+                <DataGridTemplateColumn Header="Client" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Project.Client.Name}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ComboBox DisplayMemberPath="Name"    
+                              ItemsSource="{Binding Source={StaticResource clientViewSource},UpdateSourceTrigger=PropertyChanged}"       
+                              SelectedValue="{Binding Client}"       
+                              SelectedValuePath="Name" />   
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Project" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding SelectedSubitem}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ComboBox SelectedValue="{Binding SelectedSubitem}"                      
+                                  ItemsSource="{Binding  Path=SelectedMainItem.Subitems}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <!--
                 <DataGridTemplateColumn Header="Client" Width="150"  
                                 CellTemplate="{StaticResource ClientTemplate}"  
-                                CellEditingTemplate="{StaticResource ClientEditingTemplate}"/>
+                                CellEditingTemplate="{StaticResource ClientEditingTemplate}"/>-->
                 <!--<DataGridTextColumn Binding="{Binding Project.Client.Name}" Header="Client" Width="auto" />-->
-                <DataGridTextColumn Binding="{Binding Project.Name}" Header="Project" Width="auto"/>
+                <!--<DataGridTextColumn Binding="{Binding Project.Name}" Header="Project" Width="auto"/>-->
+                
                 <DataGridTextColumn Binding="{Binding EntryType}" Header="Type" Width="auto"/>
                 <DataGridTextColumn Binding="{Binding StartTime, StringFormat=\{0:HH:mm\}}" Header="StartTime" Width="auto"/>
                 <DataGridTextColumn Binding="{Binding EndTime, StringFormat=\{0:HH:mm\}}" Header="EndTime" Width="auto"/>
