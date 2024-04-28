@@ -10,7 +10,7 @@ namespace Migrate
     class Program
     {
         
-
+        /*
         private static IConfiguration Configuration { get; } = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -42,5 +42,6 @@ namespace Migrate
             
             return services.BuildServiceProvider();
         }
+        */
     }
 }

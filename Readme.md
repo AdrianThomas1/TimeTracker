@@ -1,3 +1,8 @@
+https://learn.microsoft.com/en-us/ef/core/get-started/winforms
+
+dotnet-ef migrations --project TimeTracker add Initial
+
+
 [SourceUrl](https://executecommands.com/dependency-injection-in-wpf-net-core-csharp/)
 https://docs.microsoft.com/en-us/ef/core/get-started/wpf
 https://stackoverflow.com/questions/33077159/working-with-an-observablecollection-based-on-an-entity-framework-one-to-many-pr

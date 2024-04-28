@@ -5,8 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using TimeTracker.DbContext;
-using TimeTracker.Models;
 using System.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;

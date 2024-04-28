@@ -3,9 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TimeTracker;
-
-#nullable disable
+using TimeTracker.DbContext;
 
 namespace TimeTracker.Migrations
 {
@@ -15,9 +13,10 @@ namespace TimeTracker.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "5.0.7");
 
-            modelBuilder.Entity("TimeTracker.Model.Client", b =>
+            modelBuilder.Entity("TimeTracker.Models.Client", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,16 +32,16 @@ namespace TimeTracker.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clients", (string)null);
+                    b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("TimeTracker.Model.Project", b =>
+            modelBuilder.Entity("TimeTracker.Models.Project", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ClientId")
+                    b.Property<int?>("ClientId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
@@ -75,10 +74,10 @@ namespace TimeTracker.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("TimeTracker.Model.TimeEntry", b =>
+            modelBuilder.Entity("TimeTracker.Models.TimeEntry", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,6 +89,9 @@ namespace TimeTracker.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("EntryType")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsCaptured")
                         .HasColumnType("INTEGER");
 
@@ -98,7 +100,7 @@ namespace TimeTracker.Migrations
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
-                    b.Property<int>("ProjectId")
+                    b.Property<int?>("ProjectId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("StartTime")
@@ -111,34 +113,25 @@ namespace TimeTracker.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Entries", (string)null);
+                    b.ToTable("TimeEntries");
                 });
 
-            modelBuilder.Entity("TimeTracker.Model.Project", b =>
+            modelBuilder.Entity("TimeTracker.Models.Project", b =>
                 {
-                    b.HasOne("TimeTracker.Model.Client", "Client")
-                        .WithMany("Projects")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("TimeTracker.Models.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId");
 
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("TimeTracker.Model.TimeEntry", b =>
+            modelBuilder.Entity("TimeTracker.Models.TimeEntry", b =>
                 {
-                    b.HasOne("TimeTracker.Model.Project", "Project")
+                    b.HasOne("TimeTracker.Models.Project", "Project")
                         .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProjectId");
 
                     b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("TimeTracker.Model.Client", b =>
-                {
-                    b.Navigation("Projects");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeTracker;
 
@@ -10,9 +11,11 @@ using TimeTracker;
 namespace TimeTracker.Migrations
 {
     [DbContext(typeof(TimeTrackerDbContext))]
-    partial class TimeTrackerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240428160548_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -33,7 +36,7 @@ namespace TimeTracker.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clients", (string)null);
+                    b.ToTable("Client");
                 });
 
             modelBuilder.Entity("TimeTracker.Model.Project", b =>
@@ -75,7 +78,7 @@ namespace TimeTracker.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Project");
                 });
 
             modelBuilder.Entity("TimeTracker.Model.TimeEntry", b =>
@@ -111,7 +114,7 @@ namespace TimeTracker.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Entries", (string)null);
+                    b.ToTable("TimeEntry");
                 });
 
             modelBuilder.Entity("TimeTracker.Model.Project", b =>
