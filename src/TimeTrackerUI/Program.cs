@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TimeTracker;
+using TimeTracker.ViewModel;
 
 namespace TimeTrackerUI
 {
@@ -53,6 +54,7 @@ namespace TimeTrackerUI
             services.AddScoped<MainForm>();
             services.AddScoped<ClientsForm>();
             services.AddScoped<ProjectsForm>();
+            services.AddSingleton<ProjectsViewModel>();
         }
     }
 

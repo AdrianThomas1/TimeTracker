@@ -1,5 +1,10 @@
 https://learn.microsoft.com/en-us/ef/core/get-started/winforms
 
+https://learn.microsoft.com/en-us/dotnet/architecture/maui/mvvm
+https://devblogs.microsoft.com/dotnet/winforms-cross-platform-dotnet-maui-command-binding/
+
+https://www.c-sharpcorner.com/UploadFile/e06010/wpf-icommand-in-mvvm/
+
 dotnet-ef migrations --project TimeTracker add Initial
 
 
