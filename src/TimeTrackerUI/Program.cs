@@ -55,6 +55,7 @@ namespace TimeTrackerUI
             services.AddScoped<ClientsForm>();
             services.AddScoped<ProjectsForm>();
             services.AddSingleton<ProjectsViewModel>();
+            services.AddTransient<ProjectForm>();
         }
     }
 

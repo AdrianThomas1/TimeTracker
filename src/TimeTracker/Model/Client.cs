@@ -9,7 +9,12 @@ public class Client : PropertyObservable
 
     public bool IsDeleted { get; set; }
 
-    public virtual ObservableCollection<Project> Projects { get; } = new();   
+    public virtual ObservableCollection<Project> Projects { get; } = new();
+
+    public override string ToString()
+    {
+        return this.Name;
+    }
 }
 
 

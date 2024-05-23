@@ -15,13 +15,13 @@ public class Project
 
     public string? Description { get; set; }
 
-    public bool IsProductive { get; set; }
-    
-    public bool IsBillable { get; set; }
+    public bool IsProductive { get; set; } = false;
 
-    public bool IsEnabled { get; set; }
+    public bool IsBillable { get; set; } = false;
 
-    public bool IsDeleted { get; set; }
+    public bool IsEnabled { get; set; } = true;
 
-    public int Hours { get; set; }
+    public bool IsDeleted { get; set; } = false;
+
+    public int Hours { get; set; } = 0;
 }

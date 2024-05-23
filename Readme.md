@@ -1,5 +1,16 @@
-https://learn.microsoft.com/en-us/ef/core/get-started/winforms
+Todo:
+Validate client and project fields on edit with dialog box popup and exception messages
+Validate deletions and undeletes where related rows exist.  cannot delete client when active project has client.  Cannot delete project when time entry has active project
 
+2024-05-19 Try this
+https://stackoverflow.com/questions/68207197/c-sharp-populate-datagridview-based-on-combobox-item-selected
+
+
+
+https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.datagridviewcomboboxeditingcontrol?view=windowsdesktop-8.0
+
+https://learn.microsoft.com/en-us/ef/core/get-started/winforms
+https://devblogs.microsoft.com/dotnet/winforms-cross-platform-dotnet-maui-command-binding/
 https://learn.microsoft.com/en-us/dotnet/architecture/maui/mvvm
 https://devblogs.microsoft.com/dotnet/winforms-cross-platform-dotnet-maui-command-binding/
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Windows.Input;
 using TimeTracker.Model;
 
@@ -7,14 +8,52 @@ namespace TimeTracker.ViewModel;
 public class ProjectsViewModel : PropertyObservable
 {
     private readonly TimeTrackerDbContext _dbContext;
-    public ICommand SaveIt { get; private set; }
+    private RelayCommand _saveCommand;
+    private string _txt = "111";
+    
+    
+    private bool CanSave()
+    {
+        return (this.MyTextBox == "OK");
+    }
+    public string MyTextBox
+    {
+        get { return _txt; }
+        set
+        {
+            _txt = value;
+            _saveCommand.NotifyCanExecuteChanged();
+            OnPropertyChanged("MyTextBox");
+
+        }
+    }
 
     public ProjectsViewModel(TimeTrackerDbContext dbContext)
     {
         this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-        SaveIt = new SaveCommand(this);
+        this._saveCommand = new RelayCommand(Save, CanExecuteSaveCommand);
+        
     }
-       
+
+    /// <summary>
+    ///  Command that is bound to the button of the Form.
+    ///  When the button is clicked, the command is executed.
+    /// </summary>
+    public RelayCommand SaveCommand
+    {
+        get => _saveCommand;
+        set
+        {
+            if (_saveCommand == value)
+            {
+                return;
+            }
+
+            _saveCommand = value;
+            //OnPropertyChanged("SaveCommand");
+        }
+    }
+
 
     public BindingList<Model.Client> Clients
     {
@@ -42,6 +81,25 @@ public class ProjectsViewModel : PropertyObservable
         }
     }
 
+    private ProjectVM _currentItem;
+    public ProjectVM CurrentItem
+    {
+        get
+        {
+            return _currentItem;
+        }
+        set
+        {
+            _currentItem = value;
+        }
+    }
+
+
+    public bool CanExecuteSaveCommand()
+    {
+        return this._txt == "OK";
+    }
+
     public void Save()
     {
         _dbContext.SaveChanges();
@@ -55,33 +113,8 @@ public class ProjectsViewModel : PropertyObservable
         }
         _dbContext.Projects.Add(project.Model);
     }
-   
-    
-
-    
 }
 
-class SaveCommand : ICommand
-{
-    ProjectsViewModel parent;
-
-    public SaveCommand(ProjectsViewModel parent)
-    {
-        this.parent = parent ?? throw new ArgumentNullException(nameof(parent));
-        parent.PropertyChanged += delegate { CanExecuteChanged?.Invoke(this, EventArgs.Empty); };
-    }
-
-    public event EventHandler CanExecuteChanged;
-
-    public bool CanExecute(object parameter)
-    {
-        return true;
-    }
-
-    public void Execute(object parameter)
-    {
-        parent.Save();
-    }
 
 
-}
+
