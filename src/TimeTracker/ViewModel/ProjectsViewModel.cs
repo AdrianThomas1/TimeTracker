@@ -9,8 +9,9 @@ public class ProjectsViewModel : PropertyObservable
 {
     private readonly TimeTrackerDbContext _dbContext;
     private RelayCommand _saveCommand;
-    private string _txt = "111";
-    
+    private string _txt = "OK";
+    private bool _showDeleted = false;
+
     
     private bool CanSave()
     {
@@ -31,6 +32,7 @@ public class ProjectsViewModel : PropertyObservable
     public ProjectsViewModel(TimeTrackerDbContext dbContext)
     {
         this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        this._dbContext.Database.EnsureCreated();
         this._saveCommand = new RelayCommand(Save, CanExecuteSaveCommand);
         
     }
@@ -67,8 +69,29 @@ public class ProjectsViewModel : PropertyObservable
     {
         get
         {
-            return new BindingList<ViewModel.ProjectVM>(_dbContext.Projects.Select(p => new ViewModel.ProjectVM(p)).ToList());
+            //return new BindingList<ViewModel.ProjectVM>(_dbContext.Projects.Select(p => new ViewModel.ProjectVM(p)).ToList());
+            return new BindingList<ViewModel.ProjectVM>(GetProjects());
         }
+    }
+
+    private List<ViewModel.ProjectVM> GetProjects()
+    {
+        if (_showDeleted)
+        {
+            return _dbContext.Projects
+                .IgnoreQueryFilters()
+                .OrderBy(p => p.Name)
+                .Select(p => new ViewModel.ProjectVM(p))
+                .ToList();
+        }
+        else
+        {
+			return _dbContext.Projects
+				.OrderBy(p => p.Client.Name)
+				.ThenBy(p => p.Name)
+				.Select(p => new ViewModel.ProjectVM(p))
+				.ToList();
+		}
     }
 
     private ProjectVM _currentItem;
@@ -92,16 +115,19 @@ public class ProjectsViewModel : PropertyObservable
 
     public void Save()
     {
+        _showDeleted = !_showDeleted;
+
         _dbContext.SaveChanges();
     }
 
     public void Add(ViewModel.ProjectVM project)
     {
-        if (project.Model.Client.Id == 0)
-        {
-            _dbContext.Clients.Add(project.Model.Client);
-        }
         _dbContext.Projects.Add(project.Model);
+    }
+
+    public void Remove(ViewModel.ProjectVM project)
+    {
+        _dbContext.Projects.Remove(project.Model);
     }
 }
 

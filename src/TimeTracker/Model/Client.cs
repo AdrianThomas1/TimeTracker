@@ -11,9 +11,18 @@ public class Client : PropertyObservable
 
     public virtual ObservableCollection<Project> Projects { get; } = new();
 
+    /*
     public override string ToString()
     {
         return this.Name;
+    }
+    */
+    public Client Self
+    {
+        get
+        {
+            return this;
+        }
     }
 }
 

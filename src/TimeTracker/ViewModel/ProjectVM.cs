@@ -31,18 +31,10 @@ namespace TimeTracker.ViewModel
         public ProjectVM()
         {
             _project = new Project();
-            _project.Client = new Client();
+            //_project.Client = new Client();
         }
 
-        /*
-        public string ClientName
-        {
-            get
-            {
-                return _project.Client.Name;
-            }
-        }
-        */
+        
 
         public Client Client
         {
