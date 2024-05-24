@@ -30,6 +30,10 @@
         {
             components = new System.ComponentModel.Container();
             dataGridViewProjects = new DataGridView();
+            clientsBindingSource = new BindingSource(components);
+            projectsViewModelBindingSource = new BindingSource(components);
+            buttonSave = new Button();
+            textBox1 = new TextBox();
             dgvcClient = new DataGridViewComboBoxColumn();
             dgvcProject = new DataGridViewTextBoxColumn();
             dgvcHours = new DataGridViewTextBoxColumn();
@@ -37,10 +41,6 @@
             dgvcProductive = new DataGridViewCheckBoxColumn();
             dgvcEnabled = new DataGridViewCheckBoxColumn();
             dgrcDescription = new DataGridViewTextBoxColumn();
-            clientsBindingSource = new BindingSource(components);
-            projectsViewModelBindingSource = new BindingSource(components);
-            buttonSave = new Button();
-            textBox1 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dataGridViewProjects).BeginInit();
             ((System.ComponentModel.ISupportInitialize)clientsBindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)projectsViewModelBindingSource).BeginInit();
@@ -56,12 +56,40 @@
             dataGridViewProjects.Size = new Size(1170, 316);
             dataGridViewProjects.TabIndex = 0;
             dataGridViewProjects.CellMouseDoubleClick += dataGridViewProjects_CellMouseDoubleClick;
+            dataGridViewProjects.EditingControlShowing += dataGridViewProjects_EditingControlShowing_1;
             dataGridViewProjects.RowEnter += dataGridViewProjects_RowEnter;
-            dataGridViewProjects.RowLeave += dataGridViewProjects_RowLeave;
+            // 
+            // clientsBindingSource
+            // 
+            clientsBindingSource.DataMember = "Clients";
+            clientsBindingSource.DataSource = projectsViewModelBindingSource;
+            // 
+            // projectsViewModelBindingSource
+            // 
+            projectsViewModelBindingSource.DataSource = typeof(TimeTracker.ViewModel.ProjectsViewModel);
+            // 
+            // buttonSave
+            // 
+            buttonSave.Location = new Point(635, 399);
+            buttonSave.Name = "buttonSave";
+            buttonSave.Size = new Size(94, 29);
+            buttonSave.TabIndex = 1;
+            buttonSave.Text = "Save";
+            buttonSave.UseVisualStyleBackColor = true;
+            // 
+            // textBox1
+            // 
+            textBox1.DataBindings.Add(new Binding("DataContext", projectsViewModelBindingSource, "MyTextBox", true));
+            textBox1.Location = new Point(247, 396);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(125, 27);
+            textBox1.TabIndex = 2;
             // 
             // dgvcClient
             // 
             dgvcClient.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dgvcClient.DataPropertyName = "Name";
+            dgvcClient.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
             dgvcClient.HeaderText = "Client";
             dgvcClient.MinimumWidth = 6;
             dgvcClient.Name = "dgvcClient";
@@ -119,32 +147,6 @@
             dgrcDescription.HeaderText = "Description";
             dgrcDescription.MinimumWidth = 6;
             dgrcDescription.Name = "dgrcDescription";
-            // 
-            // clientsBindingSource
-            // 
-            clientsBindingSource.DataMember = "Clients";
-            clientsBindingSource.DataSource = projectsViewModelBindingSource;
-            // 
-            // projectsViewModelBindingSource
-            // 
-            projectsViewModelBindingSource.DataSource = typeof(TimeTracker.ViewModel.ProjectsViewModel);
-            // 
-            // buttonSave
-            // 
-            buttonSave.Location = new Point(635, 399);
-            buttonSave.Name = "buttonSave";
-            buttonSave.Size = new Size(94, 29);
-            buttonSave.TabIndex = 1;
-            buttonSave.Text = "Save";
-            buttonSave.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            textBox1.DataBindings.Add(new Binding("DataContext", projectsViewModelBindingSource, "MyTextBox", true));
-            textBox1.Location = new Point(247, 396);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(125, 27);
-            textBox1.TabIndex = 2;
             // 
             // ProjectsForm
             // 

@@ -34,6 +34,16 @@ namespace TimeTracker.ViewModel
             _project.Client = new Client();
         }
 
+        /*
+        public string ClientName
+        {
+            get
+            {
+                return _project.Client.Name;
+            }
+        }
+        */
+
         public Client Client
         {
             get

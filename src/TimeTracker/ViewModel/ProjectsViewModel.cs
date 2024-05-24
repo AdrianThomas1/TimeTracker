@@ -67,17 +67,7 @@ public class ProjectsViewModel : PropertyObservable
     {
         get
         {
-            /*
-            //return new BindingList<ProjectVM>(_dbContext.Projects.Select(p => new ProjectVM(p)));
-            var test = new BindingList<ProjectVM>();
-            foreach (var item in _dbContext.Projects)
-            {
-                test.Add(new ProjectVM(item));
-            }
-            return test;
-            */
             return new BindingList<ViewModel.ProjectVM>(_dbContext.Projects.Select(p => new ViewModel.ProjectVM(p)).ToList());
-                
         }
     }
 

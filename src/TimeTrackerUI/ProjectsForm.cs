@@ -21,6 +21,7 @@ namespace TimeTrackerUI
         private readonly ProjectsViewModel vm;
         private readonly IServiceProvider _services;
         private int dataGridViewOffset = 0;
+        private ComboBox curCombo;
         //private readonly TimeTrackerDbContext dbContext;
         public ProjectsForm(IServiceProvider serviceProvider, ProjectsViewModel view)
         {
@@ -30,22 +31,42 @@ namespace TimeTrackerUI
             dataGridViewProjects.AutoGenerateColumns = false;
             dataGridViewProjects.DataSource = view.Projects;
             dgvcClient.DataSource = vm.Clients;
-            //dgvcClient.ValueMember = "Client";
-            dgvcClient.ValueType = typeof(Client);
-            
+            dgvcClient.DisplayMember = "Name";
+            //dgvcClient.DataPropertyName = "Name";
+            dgvcClient.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
+            dgvcClient.ValueMember = "Client";
+            //dgvcClient.ValueType = typeof(Client);
+
             textBox1.DataBindings.Add(new Binding("Text", vm, "MyTextBox"));
             buttonSave.Command = vm.SaveCommand;
             this.dataGridViewOffset = this.Width - (dataGridViewProjects.Width);
 
-            //AddClientsColumn();
 
-            MyComboBoxColumn col =
-            new MyComboBoxColumn();
-            dataGridViewProjects.Columns.Add(col);
-            col.DataSource = vm.Clients;
-            col.Name = "RollOver";
-            // col.DefaultCellStyle.Format = "##:##";
+            curCombo = new ComboBox();
+            curCombo.DataSource = vm.Clients;
+            curCombo.DisplayMember = "Name";
+            curCombo.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            /*
+            comboBox1.DataSource = vm.Clients;
+            comboBox1.DisplayMember = "Name";
+            comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            */
         }
+
+
+
+        /*
+        private void ComboBox1_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            var cmb = (ComboBox)sender;
+            System.Diagnostics.Debug.WriteLine(cmb.SelectedValue.GetType().ToString());
+            var c = (Client)cmb.SelectedValue;
+            System.Diagnostics.Debug.WriteLine(c.Id);
+            throw new NotImplementedException();
+        }
+        */
 
         private void DataGridViewProjects_RowsAdded(object? sender, DataGridViewRowsAddedEventArgs e)
         {
@@ -69,10 +90,9 @@ namespace TimeTrackerUI
             //this.clientBindingSource.DataSource = null;
             //this.dbContext?.Dispose();
         }
-        int i = 0;
         private void dataGridViewProjects_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
-            
+
             if (e.RowIndex == 0)
                 return;
 
@@ -92,97 +112,51 @@ namespace TimeTrackerUI
             dataGridViewProjects.Width = this.Width - this.dataGridViewOffset;
         }
 
-        private void dataGridViewProjects_RowLeave(object sender, DataGridViewCellEventArgs e)
-        {
-            i++;
-            this.textBox1.Text = i.ToString();
-        }
 
-        private void AddClientsColumn()
-        {
-            DataGridViewComboBoxColumn comboBoxColumn =
-                new DataGridViewComboBoxColumn();
-            comboBoxColumn.Items.AddRange(
-                vm.Clients);
-            comboBoxColumn.ValueType = typeof(Client);
-            dataGridViewProjects.Columns.AddRange(comboBoxColumn);
-            dataGridViewProjects.EditingControlShowing +=
-                new DataGridViewEditingControlShowingEventHandler(
-                dataGridViewProjects_EditingControlShowing);
-        }
 
-        private void dataGridViewProjects_EditingControlShowing(object sender,
-    DataGridViewEditingControlShowingEventArgs e)
+
+
+
+
+        private void dataGridViewProjects_EditingControlShowing_1(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            ComboBox combo = e.Control as ComboBox;
-            if (combo != null)
+            if (dataGridViewProjects.Columns[dataGridViewProjects.CurrentCell.ColumnIndex].HeaderText == "xClient")
             {
-                // Remove an existing event-handler, if present, to avoid 
-                // adding multiple handlers when the editing control is reused.
-                combo.SelectedIndexChanged -=
-                    new EventHandler(ComboBox_SelectedIndexChanged);
 
-                // Add the event handler. 
-                combo.SelectedIndexChanged +=
-                    new EventHandler(ComboBox_SelectedIndexChanged);
+                curCombo = e.Control as ComboBox;
+                if (curCombo != null)
+                {
+                    curCombo.SelectedIndexChanged -= new EventHandler(curCombo_SelectedIndexChanged);
+                    curCombo.SelectedIndexChanged += new EventHandler(curCombo_SelectedIndexChanged);
+                }
+
             }
         }
 
-        private void ComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void curCombo_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            //((ComboBox)sender).BackColor = (Client)((ComboBox)sender).SelectedItem;
+            curCombo.SelectedIndexChanged -= new EventHandler(curCombo_SelectedIndexChanged);
+            var cmb = (ComboBox)sender;
+            System.Diagnostics.Debug.WriteLine(cmb.SelectedValue.GetType().ToString());
+            var c = (Client)cmb.SelectedValue;
+            //dataGridViewProjects.CurrentRow.Cells["dgvcClient"].Value = c;
+            vm.CurrentItem.Client = c;
+            //System.Diagnostics.Debug.WriteLine(c.Id);
+            //throw new NotImplementedException();
         }
-
-
-        /*
-        private void dataGridViewProjects_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
-        {
-            string property = dataGridViewProjects.Columns[e.ColumnIndex].DataPropertyName;
-            object value = dataGridViewProjects[e.ColumnIndex, e.RowIndex].Value;
-            try
-            {
-                vm.ValidateEntry(property, value);
-                dataGridViewProjects.EndEdit();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-        */
 
         /*
         private void dataGridViewProjects_CellLeave(object sender, DataGridViewCellEventArgs e)
         {
-            // Check if validation is required.  Check the state of client if it is dirty.
-            // Do this on the Project VM
-            if (dataGridViewProjects.Columns[e.ColumnIndex].DataPropertyName == "Client")
+            if (dataGridViewProjects.Columns[dataGridViewProjects.CurrentCell.ColumnIndex].HeaderText == "Client")
             {
-                //projectViewModel
-                var projectVMInstance = (ProjectVM)dataGridViewProjects.Rows[e.RowIndex].DataBoundItem;
-                vm.CurrentItem = projectVMInstance; 
-                if (vm.ClientValidationRequired())
+                if (curCombo != null)
                 {
-
+                    curCombo.SelectedIndexChanged -= new EventHandler(curCombo_SelectedIndexChanged);
                 }
-                
             }
         }
         */
-
-
-        /*
-        private void buttonSave_Click(object sender, EventArgs e)
-        {
-            BindingList<ProjectVM> projects = (BindingList<ProjectVM>)this.dataGridViewProjects.DataSource;
-
-            //projects.First().Client = "aaaa";
-            vm.Save();
-            //this.dbContext!.SaveChanges();
-            //this.dataGridViewProjects.Refresh();
-        }
-        */
-
     }
 
 
