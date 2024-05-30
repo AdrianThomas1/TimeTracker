@@ -50,10 +50,17 @@ public class TimeTrackerDbContext : DbContext
         base.OnConfiguring(optionsBuilder);
     }
 
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        UpdateSoftDeleteStatuses();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
     public override int SaveChanges()
     {
         UpdateSoftDeleteStatuses();
         return base.SaveChanges();
+        
     }
 
     public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
@@ -74,6 +81,10 @@ public class TimeTrackerDbContext : DbContext
                 case EntityState.Deleted:
                     entry.State = EntityState.Modified;
                     entry.CurrentValues["IsDeleted"] = true;
+                    entry.CurrentValues["WhenModified"] = DateTime.Now;
+                    break;
+                case EntityState.Modified:
+                    entry.CurrentValues["WhenModified"] = DateTime.Now;
                     break;
             }
         }

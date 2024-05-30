@@ -76,6 +76,16 @@ namespace TimeTracker.ViewModel
             }
         }
 
+        public bool IsDeleted
+        {
+            get => _project.IsDeleted;
+            set
+            {
+                _project.IsDeleted = value;
+                OnPropertyChanged(nameof(IsDeleted));
+            }
+        }
+
         public string? Description
         {
             get

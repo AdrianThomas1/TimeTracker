@@ -21,8 +21,8 @@ namespace TimeTrackerUI
             InitializeComponent();
             vm = view ?? throw new ArgumentNullException(nameof(view));
 
-            textBox1.DataBindings.Add(new Binding("Text", vm.CurrentItem, "Client"));
-            textBox2.DataBindings.Add(new Binding("Text", vm.CurrentItem, "Project"));
+            //textBox1.DataBindings.Add(new Binding("Text", vm.CurrentItem, "Client"));
+            //textBox2.DataBindings.Add(new Binding("Text", vm.CurrentItem, "Project"));
 
             cmbClient.Sorted = true;
             cmbClient.DataSource = vm.Clients;
@@ -35,7 +35,7 @@ namespace TimeTrackerUI
 
         private void cmbClient_SelectedIndexChanged(object sender, EventArgs e)
         {
-            vm.CurrentItem.Client = ((Client)cmbClient.SelectedItem);
+            //vm.CurrentItem.Client = ((Client)cmbClient.SelectedItem);
         }
     }
 }

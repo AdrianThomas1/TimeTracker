@@ -3,8 +3,10 @@ using System.Windows.Input;
 
 namespace TimeTracker;
 
+
 // Implementation of ICommand - simplified version not taking parameters into account.
 //https://devblogs.microsoft.com/dotnet/winforms-cross-platform-dotnet-maui-command-binding/
+/*
 public class RelayCommand : ICommand
 {
     public event EventHandler? CanExecuteChanged;
@@ -34,3 +36,4 @@ public class RelayCommand : ICommand
     public void NotifyCanExecuteChanged()
         => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 }
+*/

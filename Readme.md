@@ -1,6 +1,15 @@
 Todo:
+
+Async Save Commands
+Fix error on EF adding rows
+
+
 Validate client and project fields on edit with dialog box popup and exception messages
 Validate deletions and undeletes where related rows exist.  cannot delete client when active project has client.  Cannot delete project when time entry has active project
+
+https://github.com/jessejohnston/ObjectListView/blob/master/ObjectListView/ObjectListView.cs
+https://objectlistview.sourceforge.net/cs/gettingStarted.html#gettingstarted
+
 
 2024-05-19 Try this
 https://stackoverflow.com/questions/68207197/c-sharp-populate-datagridview-based-on-combobox-item-selected

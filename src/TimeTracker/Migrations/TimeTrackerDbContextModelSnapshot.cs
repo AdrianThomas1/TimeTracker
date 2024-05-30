@@ -29,6 +29,13 @@ namespace TimeTracker.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("WhenCreated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("WhenModified")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -71,6 +78,12 @@ namespace TimeTracker.Migrations
                     b.Property<string>("Source")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("WhenCreated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("WhenModified")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
@@ -105,6 +118,12 @@ namespace TimeTracker.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Task")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("WhenCreated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("WhenModified")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

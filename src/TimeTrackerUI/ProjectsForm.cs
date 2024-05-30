@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,93 +18,92 @@ using TimeTracker.ViewModel;
 
 namespace TimeTrackerUI
 {
-	public partial class ProjectsForm : Form
-	{
-		private readonly ProjectsViewModel vm;
-		private readonly IServiceProvider _services;
-		private int dataGridViewOffset = 0;
-		private ComboBox curCombo;
-		//private readonly TimeTrackerDbContext dbContext;
-		public ProjectsForm(IServiceProvider serviceProvider, ProjectsViewModel view)
-		{
-			InitializeComponent();
-			vm = view ?? throw new ArgumentNullException(nameof(view));
+    public partial class ProjectsForm : Form
+    {
+        private readonly ProjectsViewModel vm;
+        private readonly IServiceProvider _services;
+        private int dataGridViewOffset = 0;
+        private ComboBox curCombo;
+        //private readonly TimeTrackerDbContext dbContext;
+        public ProjectsForm(IServiceProvider serviceProvider, ProjectsViewModel view)
+        {
+            InitializeComponent();
+            vm = view ?? throw new ArgumentNullException(nameof(view));
 
-			_services = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-			dataGridViewProjects.AutoGenerateColumns = false;
-			dataGridViewProjects.DataSource = view.Projects;
+            _services = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            dataGridViewProjects.AutoGenerateColumns = false;
+            
+            dgvcClient.Items.Add("Select");
+            dgvcClient.DefaultCellStyle.NullValue = "Select";
+            dgvcClient.DataPropertyName = "Client";
+            dgvcClient.DisplayMember = "Name";
+            dgvcClient.ValueMember = "Self";
+            dgvcClient.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
-			dgvcClient.Items.Add("Select");
-			dgvcClient.DefaultCellStyle.NullValue = "Select";
-			dgvcClient.Items.AddRange(vm.Clients.ToArray());
-			dgvcClient.DataPropertyName = "Client";
-			dgvcClient.DisplayMember = "Name";
-			dgvcClient.ValueMember = "Self";
-			dgvcClient.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+            textBox1.DataBindings.Add(new Binding("Text", vm, "MyTextBox"));
+            buttonSave.Command = vm.SaveCommand;
+            this.dataGridViewOffset = this.Width - (dataGridViewProjects.Width);
 
-			textBox1.DataBindings.Add(new Binding("Text", vm, "MyTextBox"));
-			buttonSave.Command = vm.SaveCommand;
-			this.dataGridViewOffset = this.Width - (dataGridViewProjects.Width);
+            curCombo = new ComboBox();
+            curCombo.DataSource = vm.Clients;
+            curCombo.DisplayMember = "Name";
+            curCombo.DropDownStyle = ComboBoxStyle.DropDownList;
 
-
-			curCombo = new ComboBox();
-			curCombo.DataSource = vm.Clients;
-			curCombo.DisplayMember = "Name";
-			curCombo.DropDownStyle = ComboBoxStyle.DropDownList;
-
-
-
-		}
+            this.showHideDeletedMenuItem.Command = vm.ShowHideDeleted;
+        }
 
 
-		private void DataGridViewProjects_RowsAdded(object? sender, DataGridViewRowsAddedEventArgs e)
-		{
-			var entry = (ProjectVM)dataGridViewProjects.Rows[e.RowIndex - 1].DataBoundItem;
-			vm.Add(entry);
-			//throw new NotImplementedException();
-		}
+        private void DataGridViewProjects_RowsAdded(object? sender, DataGridViewRowsAddedEventArgs e)
+        {
+            if (e.RowIndex == 0)
+                return;
 
-		protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
-			dataGridViewProjects.RowsAdded += DataGridViewProjects_RowsAdded;
+            var entry = (ProjectVM)dataGridViewProjects.Rows[e.RowIndex - 1].DataBoundItem;
+            vm.Add(entry);
+            //throw new NotImplementedException();
+        }
 
-		}
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            dataGridViewProjects.RowsAdded += DataGridViewProjects_RowsAdded;
 
-		protected override void OnClosing(CancelEventArgs e)
-		{
-			//base.OnClosing(e);
-			//this.clientBindingSource.DataSource = null;
-			//this.dbContext?.Dispose();
-		}
-		private void dataGridViewProjects_RowEnter(object sender, DataGridViewCellEventArgs e)
-		{
+        }
 
-			if (e.RowIndex == 0)
-				return;
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            //base.OnClosing(e);
+            //this.clientBindingSource.DataSource = null;
+            //this.dbContext?.Dispose();
+        }
+        private void dataGridViewProjects_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
 
-			vm.CurrentItem = (ProjectVM)((DataGridView)sender).Rows[e.RowIndex].DataBoundItem;
-		}
+            if (e.RowIndex == 0)
+                return;
 
-		private void dataGridViewProjects_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-		{
-			var frm = _services.GetRequiredService<ProjectForm>();
-			frm.ShowDialog(this);
-			frm.Close();
-		}
+            //vm.CurrentItem = (ProjectVM)((DataGridView)sender).Rows[e.RowIndex].DataBoundItem;
+        }
+
+        private void dataGridViewProjects_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            var frm = _services.GetRequiredService<ProjectForm>();
+            frm.ShowDialog(this);
+            frm.Close();
+        }
 
 
-		private void ProjectsForm_Resize(object sender, EventArgs e)
-		{
-			dataGridViewProjects.Width = this.Width - this.dataGridViewOffset;
-		}
-
+        private void ProjectsForm_Resize(object sender, EventArgs e)
+        {
+            dataGridViewProjects.Width = this.Width - this.dataGridViewOffset;
+        }
 
 
 
 
 
-		/*
+
+        /*
 		private void dataGridViewProjects_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
 		{
 			if (dataGridViewProjects.Columns[dataGridViewProjects.CurrentCell.ColumnIndex].HeaderText == "Client")
@@ -126,7 +126,7 @@ namespace TimeTrackerUI
 		*/
 
 
-		/*
+        /*
 		private void curCombo_SelectedIndexChanged(object? sender, EventArgs e)
 		{
 			curCombo.SelectedIndexChanged -= new EventHandler(curCombo_SelectedIndexChanged);
@@ -140,31 +140,36 @@ namespace TimeTrackerUI
 		}
 		*/
 
-		private void dataGridViewProjects_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
-		{
-			if (e.RowIndex == 0)
-				return;
+        private void dataGridViewProjects_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            if (e.RowIndex == 0)
+                return;
 
-			var dgv = (DataGridView)sender;
-			var item = dgv.Rows[e.RowIndex].DataBoundItem as ProjectVM;
-			if (item != null)
-				vm.Remove(item);
-		}
+            var dgv = (DataGridView)sender;
+            var item = dgv.Rows[e.RowIndex].DataBoundItem as ProjectVM;
+            if (item != null)
+                vm.Remove(item);
+        }
 
-		private void dataGridViewProjects_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-		{
-			/*
+        private void dataGridViewProjects_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            /*
 			var dgv = sender as DataGridView;
 			var col = dgv.Columns[e.ColumnIndex];
 			dgv.Sort(col, ListSortDirection.Ascending);
 			*/
-		}
+        }
 
-		private void button1_Click(object sender, EventArgs e)
-		{
-			dataGridViewProjects.DataSource = vm.Projects;
-		}
-	}
+        private async void ProjectsForm_Load(object sender, EventArgs e)
+        {
+            await vm.Load();
+            dgvcClient.Items.AddRange(vm.Clients.ToArray());
+            dataGridViewProjects.DataSource = vm.Projects;
+            vm.Projects.Refresh();
+
+
+        }
+    }
 
 
 }

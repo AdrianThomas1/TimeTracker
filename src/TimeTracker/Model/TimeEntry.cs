@@ -19,7 +19,11 @@ public class TimeEntry
     public bool IsDeleted { get; set; }
 
     public bool IsCaptured { get; set; }
-    
+
+    public DateTime WhenCreated { get; set; } = DateTime.UtcNow;
+
+    public DateTime WhenModified { get; set; } = DateTime.UtcNow;
+
     [NotMapped]
     public double Duration
     {

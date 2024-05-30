@@ -24,4 +24,8 @@ public class Project
     public bool IsDeleted { get; set; } = false;
 
     public int Hours { get; set; } = 0;
+
+    public DateTime WhenCreated { get; set; } = DateTime.UtcNow;
+
+    public DateTime WhenModified { get; set; } = DateTime.UtcNow;
 }

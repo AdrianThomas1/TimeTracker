@@ -1,4 +1,6 @@
 ﻿
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace TimeTracker.Model;
 
 public class Client : PropertyObservable
@@ -11,12 +13,12 @@ public class Client : PropertyObservable
 
     public virtual ObservableCollection<Project> Projects { get; } = new();
 
-    /*
-    public override string ToString()
-    {
-        return this.Name;
-    }
-    */
+    public DateTime WhenCreated { get; set; } = DateTime.UtcNow;
+
+    public DateTime WhenModified { get; set; } = DateTime.UtcNow;
+
+
+    [NotMapped]
     public Client Self
     {
         get

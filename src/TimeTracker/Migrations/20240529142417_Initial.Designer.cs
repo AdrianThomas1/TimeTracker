@@ -11,8 +11,8 @@ using TimeTracker;
 namespace TimeTracker.Migrations
 {
     [DbContext(typeof(TimeTrackerDbContext))]
-    [Migration("20240428164222_NewTableNames")]
-    partial class NewTableNames
+    [Migration("20240529142417_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,13 @@ namespace TimeTracker.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("WhenCreated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("WhenModified")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -74,6 +81,12 @@ namespace TimeTracker.Migrations
                     b.Property<string>("Source")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("WhenCreated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("WhenModified")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
@@ -108,6 +121,12 @@ namespace TimeTracker.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Task")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("WhenCreated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("WhenModified")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
