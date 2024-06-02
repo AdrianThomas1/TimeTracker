@@ -1,4 +1,8 @@
 Todo:
+Todo
+Vm control menu text
+vm control whether or not to make deleted column visible
+
 
 Async Save Commands
 Fix error on EF adding rows

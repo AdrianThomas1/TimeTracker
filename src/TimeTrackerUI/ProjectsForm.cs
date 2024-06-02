@@ -32,15 +32,17 @@ namespace TimeTrackerUI
 
             _services = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             dataGridViewProjects.AutoGenerateColumns = false;
-            
+
             dgvcClient.Items.Add("Select");
             dgvcClient.DefaultCellStyle.NullValue = "Select";
             dgvcClient.DataPropertyName = "Client";
             dgvcClient.DisplayMember = "Name";
             dgvcClient.ValueMember = "Self";
-            dgvcClient.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
-            textBox1.DataBindings.Add(new Binding("Text", vm, "MyTextBox"));
+            dgvcSource.DataPropertyName = "Source";
+            dgvcSource.DefaultCellStyle.NullValue = "Select";
+
+            dgvcSource.Items.AddRange(vm.Sources);
             buttonSave.Command = vm.SaveCommand;
             this.dataGridViewOffset = this.Width - (dataGridViewProjects.Width);
 
@@ -49,24 +51,42 @@ namespace TimeTrackerUI
             curCombo.DisplayMember = "Name";
             curCombo.DropDownStyle = ComboBoxStyle.DropDownList;
 
-            this.showHideDeletedMenuItem.Command = vm.ShowHideDeleted;
+            this.showHideDeletedMenuItem.Command = vm.ToggleViewDeletedItemsCommand;
+            this.showHideDeletedMenuItem.DataBindings.Add("Text", vm, "ViewHideDeletedMenuText");
+
+            //dgvcIsDeleted.Visible = vm.ShowDeleted;
+
+            dataGridViewProjects.UserDeletingRow += DataGridViewProjects_UserDeletingRow;
+            dataGridViewProjects.UserAddedRow += DataGridViewProjects_UserAddedRow;
+           //dataGridViewProjects.RowsAdded += DataGridViewProjects_RowsAdded;
+            
         }
 
-
-        private void DataGridViewProjects_RowsAdded(object? sender, DataGridViewRowsAddedEventArgs e)
+        private void DataGridViewProjects_UserAddedRow(object? sender, DataGridViewRowEventArgs e)
         {
-            if (e.RowIndex == 0)
-                return;
-
-            var entry = (ProjectVM)dataGridViewProjects.Rows[e.RowIndex - 1].DataBoundItem;
-            vm.Add(entry);
-            //throw new NotImplementedException();
+            var item = vm.Projects[vm.Projects.Count - 1];
+            vm.Add(item);
+            //dataGridViewProjects.Refresh();
+            //var p = vm.Projects.DataSource.AddNew();
+            //vm.Add(new ProjectVM());
         }
+
+        private void DataGridViewProjects_UserDeletingRow(object? sender, DataGridViewRowCancelEventArgs e)
+        {
+            var item = e.Row?.DataBoundItem as ProjectVM;
+            if (item != null)
+            {
+                vm.Remove(item);
+            }
+            e.Cancel = true;
+        }
+
+        
+        
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            dataGridViewProjects.RowsAdded += DataGridViewProjects_RowsAdded;
 
         }
 
@@ -76,15 +96,8 @@ namespace TimeTrackerUI
             //this.clientBindingSource.DataSource = null;
             //this.dbContext?.Dispose();
         }
-        private void dataGridViewProjects_RowEnter(object sender, DataGridViewCellEventArgs e)
-        {
-
-            if (e.RowIndex == 0)
-                return;
-
-            //vm.CurrentItem = (ProjectVM)((DataGridView)sender).Rows[e.RowIndex].DataBoundItem;
-        }
-
+        
+        
         private void dataGridViewProjects_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             var frm = _services.GetRequiredService<ProjectForm>();
@@ -145,10 +158,13 @@ namespace TimeTrackerUI
             if (e.RowIndex == 0)
                 return;
 
+            /*
             var dgv = (DataGridView)sender;
             var item = dgv.Rows[e.RowIndex].DataBoundItem as ProjectVM;
             if (item != null)
                 vm.Remove(item);
+            */
+            //vm.SaveCommand.NotifyCanExecuteChanged();
         }
 
         private void dataGridViewProjects_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -166,8 +182,12 @@ namespace TimeTrackerUI
             dgvcClient.Items.AddRange(vm.Clients.ToArray());
             dataGridViewProjects.DataSource = vm.Projects;
             vm.Projects.Refresh();
+        }
 
-
+        
+        private void dataGridViewProjects_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            vm.SaveCommand.NotifyCanExecuteChanged();
         }
     }
 

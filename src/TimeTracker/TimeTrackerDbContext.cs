@@ -62,12 +62,13 @@ public class TimeTrackerDbContext : DbContext
         return base.SaveChanges();
         
     }
-
+    /*
     public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {
         UpdateSoftDeleteStatuses();
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
+    */
 
     private void UpdateSoftDeleteStatuses()
     {

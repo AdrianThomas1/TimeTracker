@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using TimeTracker.Model;
 using TimeTracker.ViewModel;
 using Xunit.Abstractions;
 
@@ -81,32 +82,24 @@ namespace TimeTracker.Tests
             vm.Projects.Refresh();
             vm.Projects.Count().Should().Be(2);
 
+
+            vm.Test();
+
+
+
             
-            vm.MyTextBox = "NotOK";
-            vm.SaveCommand.CanExecute(CancellationToken.None).Should().BeFalse();
-            vm.MyTextBox = "OK";
-            vm.SaveCommand.CanExecute(CancellationToken.None).Should().BeTrue();
-
-            await vm.SaveCommand.ExecuteAsync(CancellationToken.None);
-            WriteStates();
-
-            vm.Projects.Last().IsDeleted = true;
-
-            output.WriteLine($"Item count: {vm.Projects.Count}");
-            vm.ShowHideDeleted.Execute(null); // Show Deleted
-            output.WriteLine($"Item count: {vm.Projects.Count}");
-            vm.Projects.Last().IsDeleted = true;
-            vm.ShowHideDeleted.Execute(null); // Show Active
-            output.WriteLine($"Item count: {vm.Projects.Count}");
-            vm.ShowHideDeleted.Execute(null); // Show Deleted
-            vm.Projects.First().IsDeleted = false;
-            vm.ShowHideDeleted.Execute(null); // Show Active
-            output.WriteLine($"Item count: {vm.Projects.Count}");
-
-            await vm.SaveCommand.ExecuteAsync(CancellationToken.None);
-            WriteStates();
 
         }
+
+        
+        [Fact]
+        public void TestLogicAnd()
+        {
+            //System.Linq.
+            //Func<Customer, Boolean> f = DynamicLinq.ParseToFunction<Customer, Boolean>("Name == 'Gian Maria' && Age > 5");
+            //Assert.That(f(aCustomer), Is.True);
+        }
+        
 
         private void WriteStates()
         {

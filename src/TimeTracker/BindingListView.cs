@@ -19,19 +19,33 @@ namespace TimeTracker;
 public class BindingListView<T> : BindingList<T>, IBindingListView
 {
 
-    //private Action? _filterAction;
     private string? _filter;
-    //private Func<T, bool>? _filterFunc;
-    //private Expression<Func<T,bool>>? _filterExpression;
-    private Predicate<T> _filterPredicate;
+    private Func<T, bool> _filterPredicate;
     private List<int> sortIndexes = new List<int>();
-    private readonly List<T> _originalData;
+    private BindingList<T> _dataSource;
+    private readonly Func<T> _bindingList;
     public BindingListView(BindingList<T> List) : base()
     {
-        _originalData = new List<T>(List);
+        _dataSource = List;
+        
+    }
+
+    public BindingList<T> DataSource
+    {
+        get
+        {
+            return _dataSource;
+        }
+        
+        set
+        {
+            _dataSource = value;
+            Refresh();
+        }
+        
     }
     
-    public Predicate<T> FilterPredicate
+    public Func<T, bool> FilterPredicate
     {
         get { return this._filterPredicate; }
         set
@@ -45,13 +59,28 @@ public class BindingListView<T> : BindingList<T>, IBindingListView
         }
     }
 
+    private void ApplyFilter()
+    {
+        var filtered = _dataSource.AsQueryable();
+        //if (_filter != null)
+        //{
+            filtered = filtered.Where(c => _filterPredicate(c));
+        //}
+        this.Items.Clear();
+        foreach (var item in filtered)
+        {
+            Items.Add(item);
+        }
+    }
 
     public void Refresh()
     {
-        this.sortIndexes = new List<int>(_originalData.Count);
-        for (int i = 0; i < _originalData.Count; i++)
+        ApplyFilter();
+        /*
+        this.sortIndexes = new List<int>(_dataSource.Count);
+        for (int i = 0; i < _dataSource.Count; i++)
         {
-            if (this._filterPredicate(_originalData[i]))
+            if (this._filterPredicate(_dataSource[i]))
             {
                 this.sortIndexes.Add(i);
             }
@@ -60,9 +89,9 @@ public class BindingListView<T> : BindingList<T>, IBindingListView
         this.Items.Clear();
         foreach (int i in sortIndexes)
         {
-            this.Items.Add(_originalData[i]);
+            this.Items.Add(_dataSource[i]);
         }
-        
+        */
         OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
     }
 
@@ -77,7 +106,7 @@ public class BindingListView<T> : BindingList<T>, IBindingListView
     public void RemoveFilter()
     {
         Items.Clear();
-        foreach (var item in _originalData)
+        foreach (var item in _dataSource)
         {
             Items.Add(item);
         }

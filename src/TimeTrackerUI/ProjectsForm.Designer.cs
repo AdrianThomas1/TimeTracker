@@ -31,6 +31,7 @@
             components = new System.ComponentModel.Container();
             dataGridViewProjects = new DataGridView();
             dgvcClient = new DataGridViewComboBoxColumn();
+            dgvcSource = new DataGridViewComboBoxColumn();
             dgvcProject = new DataGridViewTextBoxColumn();
             dgvcHours = new DataGridViewTextBoxColumn();
             dgvcBillable = new DataGridViewCheckBoxColumn();
@@ -40,11 +41,10 @@
             dgrcDescription = new DataGridViewTextBoxColumn();
             projectsViewModelBindingSource = new BindingSource(components);
             buttonSave = new Button();
-            textBox1 = new TextBox();
-            button1 = new Button();
             menuStrip1 = new MenuStrip();
             menu = new ToolStripMenuItem();
             showHideDeletedMenuItem = new ToolStripMenuItem();
+            textBoxFilter = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dataGridViewProjects).BeginInit();
             ((System.ComponentModel.ISupportInitialize)projectsViewModelBindingSource).BeginInit();
             menuStrip1.SuspendLayout();
@@ -53,24 +53,38 @@
             // dataGridViewProjects
             // 
             dataGridViewProjects.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewProjects.Columns.AddRange(new DataGridViewColumn[] { dgvcClient, dgvcProject, dgvcHours, dgvcBillable, dgvcProductive, dgvcEnabled, dgvcIsDeleted, dgrcDescription });
+            dataGridViewProjects.Columns.AddRange(new DataGridViewColumn[] { dgvcClient, dgvcSource, dgvcProject, dgvcHours, dgvcBillable, dgvcProductive, dgvcEnabled, dgvcIsDeleted, dgrcDescription });
             dataGridViewProjects.Location = new Point(11, 59);
             dataGridViewProjects.Name = "dataGridViewProjects";
             dataGridViewProjects.RowHeadersWidth = 51;
             dataGridViewProjects.Size = new Size(1170, 316);
             dataGridViewProjects.TabIndex = 0;
+            dataGridViewProjects.CellEndEdit += dataGridViewProjects_CellEndEdit;
             dataGridViewProjects.ColumnHeaderMouseClick += dataGridViewProjects_ColumnHeaderMouseClick;
-            dataGridViewProjects.RowEnter += dataGridViewProjects_RowEnter;
             dataGridViewProjects.RowsRemoved += dataGridViewProjects_RowsRemoved;
             // 
             // dgvcClient
             // 
+            dgvcClient.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dgvcClient.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+            dgvcClient.FlatStyle = FlatStyle.Flat;
             dgvcClient.HeaderText = "Client";
             dgvcClient.MinimumWidth = 6;
             dgvcClient.Name = "dgvcClient";
             dgvcClient.Resizable = DataGridViewTriState.True;
             dgvcClient.SortMode = DataGridViewColumnSortMode.Automatic;
-            dgvcClient.Width = 125;
+            dgvcClient.Width = 76;
+            // 
+            // dgvcSource
+            // 
+            dgvcSource.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dgvcSource.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+            dgvcSource.FlatStyle = FlatStyle.Flat;
+            dgvcSource.HeaderText = "Source";
+            dgvcSource.MinimumWidth = 6;
+            dgvcSource.Name = "dgvcSource";
+            dgvcSource.SortMode = DataGridViewColumnSortMode.Automatic;
+            dgvcSource.Width = 83;
             // 
             // dgvcProject
             // 
@@ -147,24 +161,6 @@
             buttonSave.Text = "Save";
             buttonSave.UseVisualStyleBackColor = true;
             // 
-            // textBox1
-            // 
-            textBox1.DataBindings.Add(new Binding("DataContext", projectsViewModelBindingSource, "MyTextBox", true));
-            textBox1.Location = new Point(247, 396);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(125, 27);
-            textBox1.TabIndex = 2;
-            // 
-            // button1
-            // 
-            button1.Location = new Point(808, 408);
-            button1.Margin = new Padding(3, 4, 3, 4);
-            button1.Name = "button1";
-            button1.Size = new Size(86, 31);
-            button1.TabIndex = 3;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = true;
-            // 
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
@@ -188,13 +184,19 @@
             showHideDeletedMenuItem.Size = new Size(223, 26);
             showHideDeletedMenuItem.Text = "Show/Hide &Deleted";
             // 
+            // textBoxFilter
+            // 
+            textBoxFilter.Location = new Point(12, 26);
+            textBoxFilter.Name = "textBoxFilter";
+            textBoxFilter.Size = new Size(1169, 27);
+            textBoxFilter.TabIndex = 5;
+            // 
             // ProjectsForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1194, 473);
-            Controls.Add(button1);
-            Controls.Add(textBox1);
+            Controls.Add(textBoxFilter);
             Controls.Add(buttonSave);
             Controls.Add(dataGridViewProjects);
             Controls.Add(menuStrip1);
@@ -219,12 +221,11 @@
         private DataGridViewTextBoxColumn projectDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private BindingSource projectsViewModelBindingSource;
-        private TextBox textBox1;
-		private Button button1;
         private MenuStrip menuStrip1;
         private ToolStripMenuItem menu;
         private ToolStripMenuItem showHideDeletedMenuItem;
         private DataGridViewComboBoxColumn dgvcClient;
+        private DataGridViewComboBoxColumn dgvcSource;
         private DataGridViewTextBoxColumn dgvcProject;
         private DataGridViewTextBoxColumn dgvcHours;
         private DataGridViewCheckBoxColumn dgvcBillable;
@@ -232,5 +233,6 @@
         private DataGridViewCheckBoxColumn dgvcEnabled;
         private DataGridViewCheckBoxColumn dgvcIsDeleted;
         private DataGridViewTextBoxColumn dgrcDescription;
+        private TextBox textBoxFilter;
     }
 }

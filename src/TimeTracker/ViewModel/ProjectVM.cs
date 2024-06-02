@@ -31,7 +31,6 @@ namespace TimeTracker.ViewModel
         public ProjectVM()
         {
             _project = new Project();
-            //_project.Client = new Client();
         }
 
         
@@ -94,7 +93,7 @@ namespace TimeTracker.ViewModel
             }
             set
             {
-                _project.Source = value;
+                _project.Description = value;
                 OnPropertyChanged(nameof(Description));
             }
         }
@@ -121,6 +120,8 @@ namespace TimeTracker.ViewModel
             set
             {
                 _project.IsBillable = value;
+                if (value)
+                    IsProductive = value;
                 OnPropertyChanged(nameof(IsBillable));
             }
         }

@@ -18,6 +18,7 @@ public class Project
     public bool IsProductive { get; set; } = false;
 
     public bool IsBillable { get; set; } = false;
+        
 
     public bool IsEnabled { get; set; } = true;
 

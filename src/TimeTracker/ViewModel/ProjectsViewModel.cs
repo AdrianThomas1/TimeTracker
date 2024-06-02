@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using TimeTracker.Model;
+using System.Linq.Dynamic.Core;
 
 namespace TimeTracker.ViewModel;
 
@@ -12,43 +13,31 @@ public class ProjectsViewModel : PropertyObservable
     private readonly TimeTrackerDbContext _dbContext;
     //private readonly RelayCommand _saveCommand;
     private readonly AsyncRelayCommand _saveCommand;
-    private readonly RelayCommand _showHideDeleted;
+    private readonly RelayCommand _toggleDeletedItemsViewCommand;
     //private readonly RelayCommand _loadCommand;
-    private string _txt = "OK";
     private bool _showDeleted = false;
+    private string _showDeletedMenuText = "Show &Deleted";
     //private BindingList<ViewModel.ProjectVM> _projects;
     private BindingListView<ProjectVM>? _projects;
     
     
 
-    private bool CanSave()
-    {
-        return (this.MyTextBox == "OK");
-    }
-    public string MyTextBox
-    {
-        get { return _txt; }
-        set
-        {
-            _txt = value;
-            _saveCommand.NotifyCanExecuteChanged();
-            OnPropertyChanged("MyTextBox");
-
-        }
-    }
-
     public ProjectsViewModel(TimeTrackerDbContext dbContext)
     {
         this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         this._dbContext.Database.EnsureCreated();
-        //this._saveCommand = new RelayCommand(Save, CanExecuteSaveCommand);
         this._saveCommand = new AsyncRelayCommand(Save, CanExecuteSaveCommand);
-        this._showHideDeleted = new RelayCommand(ToggleDeletedItemsView, CanExecuteTrue);
-        //this._loadCommand = new RelayCommand(Load, CanExecuteTrue);
+        this._toggleDeletedItemsViewCommand = new RelayCommand(ToggleDeletedItemsView, CanExecuteTrue);
     }
 
 
-    
+    public string[] Sources
+    {
+        get
+        {
+            return new string[] { "EPM", "ITSM" };
+        }
+    }
 
 
     public async Task Load()
@@ -67,15 +56,58 @@ public class ProjectsViewModel : PropertyObservable
             .Select(p => new ProjectVM(p))
             .ToList()));
 
-        _projects.FilterPredicate = delegate (ProjectVM projectVM)
-        {
-            return projectVM.IsDeleted == _showDeleted;
-        };
-
-        
+        _projects.FilterPredicate = IsFiltered;
     }
 
+    public bool ShowDeleted
+    {
+        get
+        {
+            return _showDeleted;
+        }
+    }
 
+    public string ViewHideDeletedMenuText
+    {
+        get
+        {
+            return _showDeletedMenuText;
+        }
+    }
+    private void DataSouce_AddingNew(object? sender, AddingNewEventArgs e)
+    {
+        //var p = new ProjectVM();
+        //_dbContext.Projects.Local.Add(p.Model);
+
+        //e.
+        //throw new NotImplementedException();
+    }
+
+    private void _projects_AddingNew(object? sender, AddingNewEventArgs e)
+    {
+        /*
+        var p = new ProjectVM();
+        p.Model.Name = "sssss";
+        e.NewObject = p;
+        _dbContext.Projects.Local.Add(p.Model);
+        //throw new NotImplementedException();
+        */
+    }
+
+    private bool IsFiltered(ProjectVM item)
+    {
+        return item.IsDeleted == _showDeleted;
+    }
+
+    private BindingList<ProjectVM> RebuildBindingList()
+    {
+        return
+            new BindingList<ProjectVM>(_dbContext
+            .Projects
+            .Local
+            .Select(p => new ProjectVM(p))
+            .ToList());
+    }
 
     /// <summary>
     ///  Command that is bound to the button of the Form.
@@ -84,32 +116,11 @@ public class ProjectsViewModel : PropertyObservable
     public IAsyncRelayCommand SaveCommand
     {
         get => _saveCommand;
-        /*
-        set
-        {
-            if (_saveCommand == value)
-            {
-                return;
-            }
-
-            _saveCommand = value;
-        }
-        */
     }
 
-    public RelayCommand ShowHideDeleted
+    public RelayCommand ToggleViewDeletedItemsCommand
     {
-        get => _showHideDeleted;
-        /*
-        set
-        {
-            if (_showHideDeleted == value)
-            {
-                return;
-            }
-            _showHideDeleted = value;
-        }
-        */
+        get => _toggleDeletedItemsViewCommand;
     }
 
     public BindingList<Model.Client> Clients
@@ -133,95 +144,74 @@ public class ProjectsViewModel : PropertyObservable
 
 
 
-    private void LoadProjects()
-    {
-        /*
-        _projects = new BindingListView<ProjectVM>(
-            new BindingList<ProjectVM>(
-                _dbContext.Projects
-                .IgnoreQueryFilters()
-                .OrderBy(p => p.Name)
-                .Select(p => new ViewModel.ProjectVM(p))
-                .ToList())
-            );
-        */
-        //_projects.FilterAction = Filter;
-        //_projects.Filter = new Predicate<object>(Filter);
-            
-        /*
-        foreach (var p in _dbContext.Projects.IgnoreQueryFilters().ToList())
-        {
-            _projects.Add(new ProjectVM(p));
-        }
-        */
-        
-        /*
-        if (_showDeleted)
-        {
-            _projects = new BindingList<ProjectVM>(
-                _dbContext.Projects
-                .IgnoreQueryFilters()
-                .OrderBy(p => p.Name)
-                .Select(p => new ViewModel.ProjectVM(p))
-                .ToList());
-        }
-        else
-        {
-            _projects = new BindingList<ProjectVM>(
-                _dbContext.Projects
-                .OrderBy(p => p.Client.Name)
-                .ThenBy(p => p.Name)
-                .Select(p => new ViewModel.ProjectVM(p))
-                .ToList());
-		}
-        */
-    }
-
     
 
-    /*
-    private ProjectVM _currentItem;
-    public ProjectVM CurrentItem
+    private bool CanExecuteTrue() => true;
+
+
+    private bool CanExecuteSaveCommand()
     {
-        get
-        {
-            return _currentItem;
-        }
-        set
-        {
-            _currentItem = value;
-        }
-    }
-    */
-
-    public bool CanExecuteTrue() => true;
-
-
-    public bool CanExecuteSaveCommand()
-    {
-        return this._txt == "OK";
+        return _dbContext.ChangeTracker.HasChanges();
     }
 
     private void ToggleDeletedItemsView()
     {
         this._showDeleted = !this._showDeleted;
+        if (! _showDeleted)
+        {
+            _showDeletedMenuText = "Show &Deleted";
+        }
+        else
+        {
+            _showDeletedMenuText = "Hide &Deleted";
+        }
+        OnPropertyChanged("ViewHideDeletedMenuText");
         _projects.Refresh();
     }
 
     private async Task Save()
     {
+        Test();
         await _dbContext.SaveChangesAsync();
-        
+        _projects.Refresh();
     }
 
+    
+    public void Test()
+    {
+        try
+        {
+            string exp1 = "Client.Name=\"CFS\"";
+            var results = _projects.DataSource.AsQueryable().Where(exp1);
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+    
     public void Add(ViewModel.ProjectVM project)
     {
-        _dbContext.Projects.Add(project.Model);
+        _dbContext.Projects.Local.Add(project.Model);
+        _projects.DataSource.Add(project);
+        _saveCommand.NotifyCanExecuteChanged();
+        /*
+        if (_dbContext.Projects.Local.Where(p => p.Id == project.Model.Id).Count() == 0)
+        {
+            //_projects?.Add(project);
+            _dbContext.Projects.Local.Add(project.Model);
+            //_projects.DataSource = RebuildBindingList();
+            //_projects.DataSource.Add(project);
+            _saveCommand.NotifyCanExecuteChanged();
+        }*/
     }
+    
 
     public void Remove(ViewModel.ProjectVM project)
     {
-        _dbContext.Projects.Remove(project.Model);
+        project.IsDeleted = true;
+        _projects.Refresh();
+        _saveCommand.NotifyCanExecuteChanged();
     }
 }
 
