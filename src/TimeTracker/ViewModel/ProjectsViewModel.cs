@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using TimeTracker.Model;
 using System.Linq.Dynamic.Core;
+using System.Data;
 
 namespace TimeTracker.ViewModel;
 
@@ -18,8 +19,8 @@ public class ProjectsViewModel : PropertyObservable
     private bool _showDeleted = false;
     private string _showDeletedMenuText = "Show &Deleted";
     //private BindingList<ViewModel.ProjectVM> _projects;
-    private BindingListView<ProjectVM>? _projects;
-    
+    //private BindingListView<ProjectVM>? _projects;
+    private DataTable _projects;
     
 
     public ProjectsViewModel(TimeTrackerDbContext dbContext)
@@ -27,7 +28,7 @@ public class ProjectsViewModel : PropertyObservable
         this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         this._dbContext.Database.EnsureCreated();
         this._saveCommand = new AsyncRelayCommand(Save, CanExecuteSaveCommand);
-        this._toggleDeletedItemsViewCommand = new RelayCommand(ToggleDeletedItemsView, CanExecuteTrue);
+        //this._toggleDeletedItemsViewCommand = new RelayCommand(ToggleDeletedItemsView, CanExecuteTrue);
     }
 
 
@@ -45,10 +46,15 @@ public class ProjectsViewModel : PropertyObservable
         await _dbContext.Projects
             .IgnoreQueryFilters()
             .LoadAsync();
+            
         await _dbContext.Clients
             .IgnoreQueryFilters()
             .LoadAsync();
 
+
+        _projects = ToDataTable(_dbContext.Projects.Local.ToList());
+
+        /*
         _projects = new BindingListView<ProjectVM>(
             new BindingList<ProjectVM>(_dbContext
             .Projects
@@ -57,6 +63,29 @@ public class ProjectsViewModel : PropertyObservable
             .ToList()));
 
         _projects.FilterPredicate = IsFiltered;
+        */
+    }
+
+    private DataTable ToDataTable(List<Project> projects)
+    {
+        DataTable dt = new DataTable();
+        // Headers
+        var properties = typeof(Project).GetProperties().ToList();
+        foreach (var prop in properties)
+        {
+           dt.Columns.Add(prop.Name, prop.PropertyType);
+        }
+        
+        foreach (var project in projects)
+        {
+            var r = dt.NewRow();
+            foreach (var prop in properties)
+            {
+                r[prop.Name] = prop.GetValue(project);
+            }
+            dt.Rows.Add(r);
+        }
+        return dt;
     }
 
     public bool ShowDeleted
@@ -94,11 +123,14 @@ public class ProjectsViewModel : PropertyObservable
         */
     }
 
+    /*
     private bool IsFiltered(ProjectVM item)
     {
         return item.IsDeleted == _showDeleted;
     }
+    */
 
+    /*
     private BindingList<ProjectVM> RebuildBindingList()
     {
         return
@@ -108,6 +140,7 @@ public class ProjectsViewModel : PropertyObservable
             .Select(p => new ProjectVM(p))
             .ToList());
     }
+    */
 
     /// <summary>
     ///  Command that is bound to the button of the Form.
@@ -134,7 +167,7 @@ public class ProjectsViewModel : PropertyObservable
         }
     }
 
-    public BindingListView<ProjectVM> Projects
+    public DataTable Projects
     {
         get
         {
@@ -142,6 +175,15 @@ public class ProjectsViewModel : PropertyObservable
         }
     }
 
+    /*
+    public BindingListView<ProjectVM> Projects
+    {
+        get
+        {
+            return _projects;
+        }
+    }
+    */
 
 
     
@@ -154,6 +196,7 @@ public class ProjectsViewModel : PropertyObservable
         return _dbContext.ChangeTracker.HasChanges();
     }
 
+    /*
     private void ToggleDeletedItemsView()
     {
         this._showDeleted = !this._showDeleted;
@@ -168,15 +211,16 @@ public class ProjectsViewModel : PropertyObservable
         OnPropertyChanged("ViewHideDeletedMenuText");
         _projects.Refresh();
     }
+    */
 
     private async Task Save()
     {
-        Test();
+        //Test();
         await _dbContext.SaveChangesAsync();
-        _projects.Refresh();
+        //_projects.Refresh();
     }
 
-    
+    /*
     public void Test()
     {
         try
@@ -189,12 +233,14 @@ public class ProjectsViewModel : PropertyObservable
 
         }
     }
-    
+    */
+
+
     public void Add(ViewModel.ProjectVM project)
     {
-        _dbContext.Projects.Local.Add(project.Model);
-        _projects.DataSource.Add(project);
-        _saveCommand.NotifyCanExecuteChanged();
+        //_dbContext.Projects.Local.Add(project.Model);
+        //_projects.DataSource.Add(project);
+        //_saveCommand.NotifyCanExecuteChanged();
         /*
         if (_dbContext.Projects.Local.Where(p => p.Id == project.Model.Id).Count() == 0)
         {
@@ -209,9 +255,9 @@ public class ProjectsViewModel : PropertyObservable
 
     public void Remove(ViewModel.ProjectVM project)
     {
-        project.IsDeleted = true;
-        _projects.Refresh();
-        _saveCommand.NotifyCanExecuteChanged();
+        //project.IsDeleted = true;
+        //_projects.Refresh();
+        //_saveCommand.NotifyCanExecuteChanged();
     }
 }
 

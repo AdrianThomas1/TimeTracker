@@ -75,7 +75,7 @@ public class BindingListView<T> : BindingList<T>, IBindingListView
 
     public void Refresh()
     {
-        ApplyFilter();
+        //ApplyFilter();
         /*
         this.sortIndexes = new List<int>(_dataSource.Count);
         for (int i = 0; i < _dataSource.Count; i++)
@@ -92,7 +92,7 @@ public class BindingListView<T> : BindingList<T>, IBindingListView
             this.Items.Add(_dataSource[i]);
         }
         */
-        OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+        //OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
     }
 
     

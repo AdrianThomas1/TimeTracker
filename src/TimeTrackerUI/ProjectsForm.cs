@@ -56,16 +56,16 @@ namespace TimeTrackerUI
 
             //dgvcIsDeleted.Visible = vm.ShowDeleted;
 
-            dataGridViewProjects.UserDeletingRow += DataGridViewProjects_UserDeletingRow;
-            dataGridViewProjects.UserAddedRow += DataGridViewProjects_UserAddedRow;
+            //dataGridViewProjects.UserDeletingRow += DataGridViewProjects_UserDeletingRow;
+            //dataGridViewProjects.UserAddedRow += DataGridViewProjects_UserAddedRow;
            //dataGridViewProjects.RowsAdded += DataGridViewProjects_RowsAdded;
             
         }
 
         private void DataGridViewProjects_UserAddedRow(object? sender, DataGridViewRowEventArgs e)
         {
-            var item = vm.Projects[vm.Projects.Count - 1];
-            vm.Add(item);
+            //var item = vm.Projects[vm.Projects.Count - 1];
+            //vm.Add(item);
             //dataGridViewProjects.Refresh();
             //var p = vm.Projects.DataSource.AddNew();
             //vm.Add(new ProjectVM());
@@ -73,12 +73,14 @@ namespace TimeTrackerUI
 
         private void DataGridViewProjects_UserDeletingRow(object? sender, DataGridViewRowCancelEventArgs e)
         {
+            /*
             var item = e.Row?.DataBoundItem as ProjectVM;
             if (item != null)
             {
                 vm.Remove(item);
             }
             e.Cancel = true;
+            */
         }
 
         
@@ -181,7 +183,7 @@ namespace TimeTrackerUI
             await vm.Load();
             dgvcClient.Items.AddRange(vm.Clients.ToArray());
             dataGridViewProjects.DataSource = vm.Projects;
-            vm.Projects.Refresh();
+            //vm.Projects.Refresh();
         }
 
         

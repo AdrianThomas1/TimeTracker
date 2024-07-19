@@ -30,6 +30,12 @@
         {
             components = new System.ComponentModel.Container();
             dataGridViewProjects = new DataGridView();
+            projectsViewModelBindingSource = new BindingSource(components);
+            buttonSave = new Button();
+            menuStrip1 = new MenuStrip();
+            menu = new ToolStripMenuItem();
+            showHideDeletedMenuItem = new ToolStripMenuItem();
+            textBoxFilter = new TextBox();
             dgvcClient = new DataGridViewComboBoxColumn();
             dgvcSource = new DataGridViewComboBoxColumn();
             dgvcProject = new DataGridViewTextBoxColumn();
@@ -39,12 +45,6 @@
             dgvcEnabled = new DataGridViewCheckBoxColumn();
             dgvcIsDeleted = new DataGridViewCheckBoxColumn();
             dgrcDescription = new DataGridViewTextBoxColumn();
-            projectsViewModelBindingSource = new BindingSource(components);
-            buttonSave = new Button();
-            menuStrip1 = new MenuStrip();
-            menu = new ToolStripMenuItem();
-            showHideDeletedMenuItem = new ToolStripMenuItem();
-            textBoxFilter = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dataGridViewProjects).BeginInit();
             ((System.ComponentModel.ISupportInitialize)projectsViewModelBindingSource).BeginInit();
             menuStrip1.SuspendLayout();
@@ -63,6 +63,49 @@
             dataGridViewProjects.ColumnHeaderMouseClick += dataGridViewProjects_ColumnHeaderMouseClick;
             dataGridViewProjects.RowsRemoved += dataGridViewProjects_RowsRemoved;
             // 
+            // projectsViewModelBindingSource
+            // 
+            projectsViewModelBindingSource.DataSource = typeof(TimeTracker.ViewModel.ProjectsViewModel);
+            // 
+            // buttonSave
+            // 
+            buttonSave.Location = new Point(635, 399);
+            buttonSave.Name = "buttonSave";
+            buttonSave.Size = new Size(94, 29);
+            buttonSave.TabIndex = 1;
+            buttonSave.Text = "Save";
+            buttonSave.UseVisualStyleBackColor = true;
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.ImageScalingSize = new Size(20, 20);
+            menuStrip1.Items.AddRange(new ToolStripItem[] { menu });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(1194, 28);
+            menuStrip1.TabIndex = 4;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // menu
+            // 
+            menu.DropDownItems.AddRange(new ToolStripItem[] { showHideDeletedMenuItem });
+            menu.Name = "menu";
+            menu.Size = new Size(55, 24);
+            menu.Text = "&View";
+            // 
+            // showHideDeletedMenuItem
+            // 
+            showHideDeletedMenuItem.Name = "showHideDeletedMenuItem";
+            showHideDeletedMenuItem.Size = new Size(223, 26);
+            showHideDeletedMenuItem.Text = "Show/Hide &Deleted";
+            // 
+            // textBoxFilter
+            // 
+            textBoxFilter.Location = new Point(12, 26);
+            textBoxFilter.Name = "textBoxFilter";
+            textBoxFilter.Size = new Size(1169, 27);
+            textBoxFilter.TabIndex = 5;
+            // 
             // dgvcClient
             // 
             dgvcClient.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
@@ -72,6 +115,7 @@
             dgvcClient.MinimumWidth = 6;
             dgvcClient.Name = "dgvcClient";
             dgvcClient.Resizable = DataGridViewTriState.True;
+            dgvcClient.Sorted = true;
             dgvcClient.SortMode = DataGridViewColumnSortMode.Automatic;
             dgvcClient.Width = 76;
             // 
@@ -83,6 +127,7 @@
             dgvcSource.HeaderText = "Source";
             dgvcSource.MinimumWidth = 6;
             dgvcSource.Name = "dgvcSource";
+            dgvcSource.Sorted = true;
             dgvcSource.SortMode = DataGridViewColumnSortMode.Automatic;
             dgvcSource.Width = 83;
             // 
@@ -148,49 +193,6 @@
             dgrcDescription.MinimumWidth = 6;
             dgrcDescription.Name = "dgrcDescription";
             // 
-            // projectsViewModelBindingSource
-            // 
-            projectsViewModelBindingSource.DataSource = typeof(TimeTracker.ViewModel.ProjectsViewModel);
-            // 
-            // buttonSave
-            // 
-            buttonSave.Location = new Point(635, 399);
-            buttonSave.Name = "buttonSave";
-            buttonSave.Size = new Size(94, 29);
-            buttonSave.TabIndex = 1;
-            buttonSave.Text = "Save";
-            buttonSave.UseVisualStyleBackColor = true;
-            // 
-            // menuStrip1
-            // 
-            menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { menu });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1194, 28);
-            menuStrip1.TabIndex = 4;
-            menuStrip1.Text = "menuStrip1";
-            // 
-            // menu
-            // 
-            menu.DropDownItems.AddRange(new ToolStripItem[] { showHideDeletedMenuItem });
-            menu.Name = "menu";
-            menu.Size = new Size(55, 24);
-            menu.Text = "&View";
-            // 
-            // showHideDeletedMenuItem
-            // 
-            showHideDeletedMenuItem.Name = "showHideDeletedMenuItem";
-            showHideDeletedMenuItem.Size = new Size(223, 26);
-            showHideDeletedMenuItem.Text = "Show/Hide &Deleted";
-            // 
-            // textBoxFilter
-            // 
-            textBoxFilter.Location = new Point(12, 26);
-            textBoxFilter.Name = "textBoxFilter";
-            textBoxFilter.Size = new Size(1169, 27);
-            textBoxFilter.TabIndex = 5;
-            // 
             // ProjectsForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -224,6 +226,7 @@
         private MenuStrip menuStrip1;
         private ToolStripMenuItem menu;
         private ToolStripMenuItem showHideDeletedMenuItem;
+        private TextBox textBoxFilter;
         private DataGridViewComboBoxColumn dgvcClient;
         private DataGridViewComboBoxColumn dgvcSource;
         private DataGridViewTextBoxColumn dgvcProject;
@@ -233,6 +236,5 @@
         private DataGridViewCheckBoxColumn dgvcEnabled;
         private DataGridViewCheckBoxColumn dgvcIsDeleted;
         private DataGridViewTextBoxColumn dgrcDescription;
-        private TextBox textBoxFilter;
     }
 }
